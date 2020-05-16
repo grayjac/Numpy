@@ -7,6 +7,7 @@
 
 
 import numpy as np
+from matplotlib import pyplot as plt
 
 
 def numpy_close(array_a, array_b, tol=1e-8):
@@ -55,13 +56,21 @@ def simulate_dice_rolls(num_rolls, iterations):
     :return:
     """
 
-    return np.random.uniform(1*num_rolls, 6*num_rolls, size=(1, iterations))
+    iteration_array = np.random.randint(1 * num_rolls, (6 * num_rolls) + 1, size=iterations)
+
+    plt.hist(iteration_array)
+    plt.title('dice_{}_rolls{} Plot'.format(num_rolls, iterations))
+    plt.ylabel('Number of instances')
+    plt.xlabel('Sum of num_rolls')
+    plt.savefig('dice_{}_rolls_{}'.format(num_rolls, iterations))
+
+    return iteration_array
 
 
 if __name__ == '__main__':
     array_a = np.array([3, 4])
     array_b = np.array([4, 3])
-    print(numpy_close(array_a, array_b))
+    print((simulate_dice_rolls(5, 2000)))
 
     # my_func = lambda x: x ** 2
     # print(simple_minimizer(my_func, -1.75, 2.25, num=5))  # Should return (0.25, 0.0625)
