@@ -7,7 +7,13 @@
 
 import numpy as np
 
-array_a = np.array([2, 3, 4])  # 1-D array
+tf_valid = np.array([
+    [0, 0, -1, 4],
+    [0, 1, 0, 2.4],
+    [1, 0, 0, 3],
+    [0, 0, 0, 1]
+])
+
 array_b = np.array([4, 5, 6])
 
 array_c = ([[1, 4, 3], [1, 5, 5]])  # 2-D array
@@ -26,4 +32,5 @@ second_column = array[:, 1]
 first_row = array[0, :]
 second_row = array[1, :]
 
-print(array[:,0:1])
+print(np.size(tf_valid[0, :]))
+print(np.shape(tf_valid))
