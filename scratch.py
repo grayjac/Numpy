@@ -32,5 +32,5 @@ second_column = array[:, 1]
 first_row = array[0, :]
 second_row = array[1, :]
 
-print(np.size(tf_valid[0, :]))
+print(tf_valid[0, :])
 print(np.shape(tf_valid))

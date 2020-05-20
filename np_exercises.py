@@ -3,12 +3,11 @@
 
 # ME499-S20 Python Lab 6
 # Programmer: Jacob Gray
-# Last Edit: 5/16/2020
+# Last Edit: 5/19/2020
 
 
 import numpy as np
 from matplotlib import pyplot as plt
-from numbers import Number
 
 
 def numpy_close(array_a, array_b, tol=1e-8):
@@ -39,8 +38,8 @@ def simple_minimizer(func, start, end, num=100):
     :return: Even integer. Index (x-coord) and value of local min of func within given bounds.
     """
 
-    if start >= end:
-        return ValueError("Your start value should be greater than your end value")
+    if start > end:
+        raise ValueError
     else:
         x_values = np.linspace(start, end, num)
         y_values = func(x_values)
@@ -78,9 +77,10 @@ def is_transformation_matrix(np_array):
     rotation = np_array[0:3, 0:3]
 
     if not isinstance(np_array, np.ndarray) and np_array.shape == (4, 4):
-        return TypeError("Must input a 4x4 Numpy array!")
+        raise TypeError("Must input a 4x4 Numpy array!")
     else:
-        if np.all(np.equal(np.int_(rotation.T @ rotation), np.identity(3))):
+        if np.allclose((rotation.T @ rotation), np.identity(3), rtol=1e-06) \
+                and np.allclose(np_array[3, :], np.array([0, 0, 0, 1])):
             return True
         else:
             return False
@@ -95,18 +95,22 @@ def nearest_neighbors(np_array, point, dist):
     :return: MxD Numpy array.
     """
 
-    rows = np_array.reshape(1, np.size(np_array[0, :]), -1)  # Converting NxD array into N number of 1xD arrays
-    distance = np.linalg.norm(point - rows)
+    length = np.linalg.norm(np_array - point, axis=1)
+    sort_length = np.sort(length) < dist
+    argsort_length = np.argsort(length)
 
-    if not isinstance(dist, Number) and dist > 0:
-        raise ValueError
-    else:
-        return
+    return np_array[argsort_length][sort_length]
 
 
 if __name__ == '__main__':
-    array_a = np.array([3, 4])
-    array_b = np.array([4, 3])
+    array = np.array([[0.70711, 0.35698, 0.61038, 6.43467],
+                      [0.70711, - 0.35698, - 0.61038, 6.43467],
+                      [0., 0.86321, -0.50485, 4.],
+                      [0., 0., 0., 1.]])
+    array2 = np.array([[0.70711, -0.70711, 0., 0.],
+              [0.70711, 0.70711, 0., 0.],
+              [0., 0., 1., 0.],
+              [0., 0., 0., 5.]])
     tf_valid = np.array([
         [0, 0, -1, 4],
         [0, 1, 0, 2.4],
@@ -120,14 +124,8 @@ if __name__ == '__main__':
         [0, 1, 1, 1],
         [-0.5, 4, 0, 2]
     ])
-
-    test_array = np.array([[0.70711, 0.35698, 0.61038, 6.43467],
-                           [0.70711, -0.35698, -0.61038, 6.43467],
-                           [0., 0.86321, -0.50485, 4.],
-                           [0., 0., 0., 1.]])
-
-    np_array = np.arange(9).reshape(3, 3)
-    print(np_array)
-    rows = np_array.reshape(1, np.size(np_array[0, :]), -1)
-    print(np_array[np_array[:, 0] > 3])
-    print(np.all(np_array > 0.5, axis=1))
+    array3 = np.array([
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0]])
